@@ -49,7 +49,6 @@ import static com.facebook.presto.common.function.OperatorType.SATURATED_FLOOR_C
 import static com.facebook.presto.common.function.OperatorType.SUBTRACT;
 import static com.facebook.presto.common.function.OperatorType.XX_HASH_64;
 import static com.facebook.presto.common.type.IntegerType.INTEGER;
-import static com.facebook.presto.spi.StandardErrorCode.DIVISION_BY_ZERO;
 import static com.facebook.presto.spi.StandardErrorCode.NUMERIC_VALUE_OUT_OF_RANGE;
 import static io.airlift.slice.Slices.utf8Slice;
 import static java.lang.Float.floatToRawIntBits;
@@ -98,27 +97,17 @@ public final class IntegerOperators
     }
 
     @ScalarOperator(DIVIDE)
-    @SqlType(StandardTypes.INTEGER)
-    public static long divide(@SqlType(StandardTypes.INTEGER) long left, @SqlType(StandardTypes.INTEGER) long right)
+    @SqlType(StandardTypes.DOUBLE)
+    public static double divide(@SqlType(StandardTypes.INTEGER) long left, @SqlType(StandardTypes.INTEGER) long right)
     {
-        try {
-            return left / right;
-        }
-        catch (ArithmeticException e) {
-            throw new PrestoException(DIVISION_BY_ZERO, e);
-        }
+        return (double) left / (double) right;
     }
 
     @ScalarOperator(MODULUS)
-    @SqlType(StandardTypes.INTEGER)
-    public static long modulus(@SqlType(StandardTypes.INTEGER) long left, @SqlType(StandardTypes.INTEGER) long right)
+    @SqlType(StandardTypes.DOUBLE)
+    public static double modulus(@SqlType(StandardTypes.INTEGER) long left, @SqlType(StandardTypes.INTEGER) long right)
     {
-        try {
-            return left % right;
-        }
-        catch (ArithmeticException e) {
-            throw new PrestoException(DIVISION_BY_ZERO, e);
-        }
+        return (double) left % (double) right;
     }
 
     @ScalarOperator(NEGATION)

@@ -96,17 +96,17 @@ public final class RealOperators
     }
 
     @ScalarOperator(DIVIDE)
-    @SqlType(StandardTypes.REAL)
-    public static long divide(@SqlType(StandardTypes.REAL) long left, @SqlType(StandardTypes.REAL) long right)
+    @SqlType(StandardTypes.DOUBLE)
+    public static double divide(@SqlType(StandardTypes.REAL) long left, @SqlType(StandardTypes.REAL) long right)
     {
-        return floatToRawIntBits(intBitsToFloat((int) left) / intBitsToFloat((int) right));
+        return ((double) intBitsToFloat((int) left)) / ((double) intBitsToFloat((int) right));
     }
 
     @ScalarOperator(MODULUS)
-    @SqlType(StandardTypes.REAL)
-    public static long modulus(@SqlType(StandardTypes.REAL) long left, @SqlType(StandardTypes.REAL) long right)
+    @SqlType(StandardTypes.DOUBLE)
+    public static double modulus(@SqlType(StandardTypes.REAL) long left, @SqlType(StandardTypes.REAL) long right)
     {
-        return floatToRawIntBits(intBitsToFloat((int) left) % intBitsToFloat((int) right));
+        return ((double) intBitsToFloat((int) left)) % ((double) intBitsToFloat((int) right));
     }
 
     @ScalarOperator(NEGATION)

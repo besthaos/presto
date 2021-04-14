@@ -50,7 +50,6 @@ import static com.facebook.presto.common.function.OperatorType.SATURATED_FLOOR_C
 import static com.facebook.presto.common.function.OperatorType.SUBTRACT;
 import static com.facebook.presto.common.function.OperatorType.XX_HASH_64;
 import static com.facebook.presto.common.type.BigintType.BIGINT;
-import static com.facebook.presto.spi.StandardErrorCode.DIVISION_BY_ZERO;
 import static com.facebook.presto.spi.StandardErrorCode.NUMERIC_VALUE_OUT_OF_RANGE;
 import static io.airlift.slice.Slices.utf8Slice;
 import static java.lang.Float.floatToRawIntBits;
@@ -100,30 +99,17 @@ public final class BigintOperators
     }
 
     @ScalarOperator(DIVIDE)
-    @SqlType(StandardTypes.BIGINT)
-    public static long divide(@SqlType(StandardTypes.BIGINT) long left, @SqlType(StandardTypes.BIGINT) long right)
+    @SqlType(StandardTypes.DOUBLE)
+    public static double divide(@SqlType(StandardTypes.BIGINT) long left, @SqlType(StandardTypes.BIGINT) long right)
     {
-        try {
-            if (left == Long.MIN_VALUE && right == -1) {
-                throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, format("bigint division overflow: %s / %s", left, right));
-            }
-            return left / right;
-        }
-        catch (ArithmeticException e) {
-            throw new PrestoException(DIVISION_BY_ZERO, e);
-        }
+        return (double) left / (double) right;
     }
 
     @ScalarOperator(MODULUS)
-    @SqlType(StandardTypes.BIGINT)
-    public static long modulus(@SqlType(StandardTypes.BIGINT) long left, @SqlType(StandardTypes.BIGINT) long right)
+    @SqlType(StandardTypes.DOUBLE)
+    public static double modulus(@SqlType(StandardTypes.BIGINT) long left, @SqlType(StandardTypes.BIGINT) long right)
     {
-        try {
-            return left % right;
-        }
-        catch (ArithmeticException e) {
-            throw new PrestoException(DIVISION_BY_ZERO, e);
-        }
+        return (double) left % (double) right;
     }
 
     @ScalarOperator(NEGATION)

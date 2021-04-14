@@ -51,7 +51,6 @@ import static com.facebook.presto.common.function.OperatorType.SATURATED_FLOOR_C
 import static com.facebook.presto.common.function.OperatorType.SUBTRACT;
 import static com.facebook.presto.common.function.OperatorType.XX_HASH_64;
 import static com.facebook.presto.common.type.DoubleType.DOUBLE;
-import static com.facebook.presto.spi.StandardErrorCode.DIVISION_BY_ZERO;
 import static com.facebook.presto.spi.StandardErrorCode.INVALID_CAST_ARGUMENT;
 import static com.facebook.presto.spi.StandardErrorCode.NUMERIC_VALUE_OUT_OF_RANGE;
 import static com.google.common.base.Preconditions.checkState;
@@ -103,24 +102,14 @@ public final class DoubleOperators
     @SqlType(StandardTypes.DOUBLE)
     public static double divide(@SqlType(StandardTypes.DOUBLE) double left, @SqlType(StandardTypes.DOUBLE) double right)
     {
-        try {
-            return left / right;
-        }
-        catch (ArithmeticException e) {
-            throw new PrestoException(DIVISION_BY_ZERO, e);
-        }
+        return left / right;
     }
 
     @ScalarOperator(MODULUS)
     @SqlType(StandardTypes.DOUBLE)
     public static double modulus(@SqlType(StandardTypes.DOUBLE) double left, @SqlType(StandardTypes.DOUBLE) double right)
     {
-        try {
-            return left % right;
-        }
-        catch (ArithmeticException e) {
-            throw new PrestoException(DIVISION_BY_ZERO, e);
-        }
+        return left % right;
     }
 
     @ScalarOperator(NEGATION)
