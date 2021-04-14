@@ -92,6 +92,10 @@ final class FixJsonDataUtils
             return null;
         }
 
+        if (signature.getBase().startsWith("timestamp_")) {
+            return String.class.cast(value);
+        }
+
         if (signature.getBase().equals(ARRAY)) {
             List<Object> fixedValue = new ArrayList<>();
             for (Object object : List.class.cast(value)) {
