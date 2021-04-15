@@ -185,7 +185,15 @@ public class LogicalPlanner
 
         if (stage.ordinal() >= Stage.OPTIMIZED.ordinal()) {
             for (PlanOptimizer optimizer : planOptimizers) {
-                root = optimizer.optimize(root, session, variableAllocator.getTypes(), variableAllocator, idAllocator, warningCollector);
+                try {
+                    root = optimizer.optimize(root, session, variableAllocator.getTypes(), variableAllocator, idAllocator, warningCollector);
+                }
+                catch (IllegalArgumentException e) {
+                    //eg:   error_code > -10000 OR error_code = ''  
+                    if (!e.getMessage().startsWith("Mismatched Domain types")) {
+                        throw e;
+                    }
+                }
                 requireNonNull(root, format("%s returned a null plan", optimizer.getClass().getName()));
             }
         }
