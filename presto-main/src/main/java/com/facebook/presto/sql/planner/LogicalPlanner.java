@@ -189,7 +189,6 @@ public class LogicalPlanner
                     root = optimizer.optimize(root, session, variableAllocator.getTypes(), variableAllocator, idAllocator, warningCollector);
                 }
                 catch (IllegalArgumentException e) {
-                    //eg:   error_code > -10000 OR error_code = ''  
                     if (!e.getMessage().startsWith("Mismatched Domain types")) {
                         throw e;
                     }
