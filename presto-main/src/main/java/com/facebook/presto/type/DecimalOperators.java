@@ -56,7 +56,6 @@ import static com.facebook.presto.common.type.UnscaledDecimal128Arithmetic.resca
 import static com.facebook.presto.common.type.UnscaledDecimal128Arithmetic.throwIfOverflows;
 import static com.facebook.presto.common.type.UnscaledDecimal128Arithmetic.unscaledDecimal;
 import static com.facebook.presto.common.type.UnscaledDecimal128Arithmetic.unscaledDecimalToUnscaledLong;
-import static com.facebook.presto.spi.StandardErrorCode.DIVISION_BY_ZERO;
 import static com.facebook.presto.spi.StandardErrorCode.NUMERIC_VALUE_OUT_OF_RANGE;
 import static com.facebook.presto.spi.function.FunctionKind.SCALAR;
 import static com.facebook.presto.spi.function.Signature.longVariableExpression;
@@ -321,7 +320,7 @@ public final class DecimalOperators
         return SqlScalarFunction.builder(DecimalOperators.class, DIVIDE)
                 .signature(signature)
                 .deterministic(true)
-                .choice(choice -> choice
+                .choice(choice -> choice.nullableResult(true)
                     .implementation(methodsGroup -> methodsGroup
                             .methods("divideShortShortShort", "divideShortLongShort", "divideLongShortShort", "divideShortShortLong", "divideLongLongLong", "divideShortLongLong", "divideLongShortLong")
                             .withExtraParameters(DecimalOperators::divideRescaleFactor)))
@@ -339,14 +338,15 @@ public final class DecimalOperators
     }
 
     @UsedByGeneratedCode
-    public static long divideShortShortShort(long dividend, long divisor, int rescaleFactor)
+    public static Long divideShortShortShort(long dividend, long divisor, int rescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
 
         if (dividend == 0) {
-            return 0;
+            return 0L;
         }
 
         int resultSignum = signum(dividend) * signum(divisor);
@@ -366,30 +366,34 @@ public final class DecimalOperators
     }
 
     @UsedByGeneratedCode
-    public static long divideShortLongShort(long dividend, Slice divisor, int rescaleFactor)
+    public static Long divideShortLongShort(long dividend, Slice divisor, int rescaleFactor)
     {
         if (isZero(divisor)) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return unscaledDecimalToUnscaledLong(divideRoundUp(dividend, rescaleFactor, divisor));
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
     @UsedByGeneratedCode
-    public static long divideLongShortShort(Slice dividend, long divisor, int rescaleFactor)
+    public static Long divideLongShortShort(Slice dividend, long divisor, int rescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return unscaledDecimalToUnscaledLong(divideRoundUp(dividend, rescaleFactor, divisor));
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -397,13 +401,15 @@ public final class DecimalOperators
     public static Slice divideShortShortLong(long dividend, long divisor, int rescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return divideRoundUp(dividend, rescaleFactor, divisor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -411,13 +417,15 @@ public final class DecimalOperators
     public static Slice divideLongLongLong(Slice dividend, Slice divisor, int rescaleFactor)
     {
         if (isZero(divisor)) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return divideRoundUp(dividend, rescaleFactor, divisor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -425,13 +433,15 @@ public final class DecimalOperators
     public static Slice divideShortLongLong(long dividend, Slice divisor, int rescaleFactor)
     {
         if (isZero(divisor)) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return divideRoundUp(dividend, rescaleFactor, divisor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -439,13 +449,15 @@ public final class DecimalOperators
     public static Slice divideLongShortLong(Slice dividend, long divisor, int rescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return divideRoundUp(dividend, rescaleFactor, divisor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -462,7 +474,7 @@ public final class DecimalOperators
         return SqlScalarFunction.builder(DecimalOperators.class, MODULUS)
                 .signature(signature)
                 .deterministic(true)
-                .choice(choice -> choice
+                .choice(choice -> choice.nullableResult(true)
                     .implementation(methodsGroup -> methodsGroup
                             .methods("modulusShortShortShort", "modulusLongLongLong", "modulusShortLongLong", "modulusShortLongShort", "modulusLongShortShort", "modulusLongShortLong")
                             .withExtraParameters(DecimalOperators::modulusRescaleParameters)))
@@ -528,44 +540,50 @@ public final class DecimalOperators
     }
 
     @UsedByGeneratedCode
-    public static long modulusShortShortShort(long dividend, long divisor, int dividendRescaleFactor, int divisorRescaleFactor)
+    public static Long modulusShortShortShort(long dividend, long divisor, int dividendRescaleFactor, int divisorRescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return unscaledDecimalToUnscaledLong(remainder(dividend, dividendRescaleFactor, divisor, divisorRescaleFactor));
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
     @UsedByGeneratedCode
-    public static long modulusShortLongShort(long dividend, Slice divisor, int dividendRescaleFactor, int divisorRescaleFactor)
+    public static Long modulusShortLongShort(long dividend, Slice divisor, int dividendRescaleFactor, int divisorRescaleFactor)
     {
         if (isZero(divisor)) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return unscaledDecimalToUnscaledLong(remainder(dividend, dividendRescaleFactor, divisor, divisorRescaleFactor));
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
     @UsedByGeneratedCode
-    public static long modulusLongShortShort(Slice dividend, long divisor, int dividendRescaleFactor, int divisorRescaleFactor)
+    public static Long modulusLongShortShort(Slice dividend, long divisor, int dividendRescaleFactor, int divisorRescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return unscaledDecimalToUnscaledLong(remainder(dividend, dividendRescaleFactor, divisor, divisorRescaleFactor));
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -573,13 +591,15 @@ public final class DecimalOperators
     public static Slice modulusShortLongLong(long dividend, Slice divisor, int dividendRescaleFactor, int divisorRescaleFactor)
     {
         if (isZero(divisor)) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return remainder(dividend, dividendRescaleFactor, divisor, divisorRescaleFactor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -587,13 +607,15 @@ public final class DecimalOperators
     public static Slice modulusLongShortLong(Slice dividend, long divisor, int dividendRescaleFactor, int divisorRescaleFactor)
     {
         if (divisor == 0) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return remainder(dividend, dividendRescaleFactor, divisor, divisorRescaleFactor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
@@ -601,13 +623,15 @@ public final class DecimalOperators
     public static Slice modulusLongLongLong(Slice dividend, Slice divisor, int dividendRescaleFactor, int divisorRescaleFactor)
     {
         if (isZero(divisor)) {
-            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
+            return null;
+//            throw new PrestoException(DIVISION_BY_ZERO, "Division by zero");
         }
         try {
             return remainder(dividend, dividendRescaleFactor, divisor, divisorRescaleFactor);
         }
         catch (ArithmeticException e) {
-            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
+            return null;
+//            throw new PrestoException(NUMERIC_VALUE_OUT_OF_RANGE, "Decimal overflow", e);
         }
     }
 
